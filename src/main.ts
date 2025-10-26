@@ -1,12 +1,10 @@
 import { Bot } from "grammy";
 import { setupCommands } from "./commands";
-import Config, { BotConfig } from "./config/config";
-import parseArgs from "./config/cli";
-import env from "./config/env";
+import { config } from "./config";
 import express from "express";
 
-function setupWebhook(bot: Bot, config: BotConfig, app: express.Express): void {
-  console.info(`[INFO] bot is starting on ${config.mode}`);
+function setupWebhook(bot: Bot, app: express.Express): void {
+  console.info(`[INFO] Bot is starting in ${config.mode} mode`);
   
   app.use(express.json());
   
@@ -39,28 +37,7 @@ async function startPolling(bot: Bot): Promise<void> {
 }
 
 async function launch(): Promise<void> {
-  const useEnv = env.token !== "";
-  let data: BotConfig;
-  
-  if (useEnv) {
-    data = {
-      token: env.token,
-      mode: env.mode,
-      host: env.host,
-      port: env.port,
-    };
-  } else {
-    if (parseArgs.config == undefined) {
-      console.error("BOT_TOKEN environment variable or --config argument required!");
-      process.exit(1);
-    }
-
-    const config = new Config(parseArgs.config);
-    config.consume();
-    data = config.data();
-  }
-  
-  const bot = new Bot(data.token);
+  const bot = new Bot(config.token);
 
   setupCommands(bot);
   bot.catch((error) => {
@@ -69,15 +46,15 @@ async function launch(): Promise<void> {
 
   const app = express();
 
-  switch (data.mode) {
+  switch (config.mode) {
     case "webhook":
-      setupWebhook(bot, data, app);
+      setupWebhook(bot, app);
       break;
     case "polling":
       await startPolling(bot);
       break;
     default:
-      throw new Error(`Invalid deployment mode: ${data.mode}`);
+      throw new Error(`Invalid deployment mode: ${config.mode}`);
   }
 };
 

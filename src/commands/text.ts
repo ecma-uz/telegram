@@ -1,12 +1,12 @@
 import { Composer, Context } from "grammy";
 import topics from "../topics.json";
-import env from "../config/env";
+import { config } from "../config";
 
 const composer = new Composer();
 
 composer.on("message:text", async (ctx: Context): Promise<any> => {
   if (
-    ctx.chat!.id === env.homeChatId &&
+    ctx.chat!.id === config.homeChatId &&
     ctx.message!.message_thread_id === topics["neofetch"]
   ) {
     return await ctx.deleteMessage();
