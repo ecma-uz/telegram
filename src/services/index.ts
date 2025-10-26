@@ -1,3 +1,2 @@
-export { PacmanSearch, TealdeerSearch, SearchService } from "./package-search";
-export type { Package } from "./package-search";
+export { PacmanSearch, TealdeerSearch, SearchService, type Package } from "./package-search";
 

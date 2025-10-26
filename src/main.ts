@@ -2,6 +2,7 @@ import { Bot } from "grammy";
 import { setupCommands } from "./commands";
 import Config, { BotConfig } from "./config/config";
 import parseArgs from "./config/cli";
+import env from "./config/env";
 import express from "express";
 
 function setupWebhook(bot: Bot, config: BotConfig, app: express.Express): void {
@@ -29,7 +30,7 @@ function setupWebhook(bot: Bot, config: BotConfig, app: express.Express): void {
   });
 
   app.listen(config.port, "127.0.0.1", () => {
-    console.log(`Server listening on port ${config.port}`);
+    console.info(`Server listening on port ${config.port}`);
   });
 };
 
@@ -38,20 +39,32 @@ async function startPolling(bot: Bot): Promise<void> {
 }
 
 async function launch(): Promise<void> {
-  if (parseArgs.config == undefined) {
-    console.log("Path to config file is not defined!");
-    process.exit(1);
+  const useEnv = env.token !== "";
+  let data: BotConfig;
+  
+  if (useEnv) {
+    data = {
+      token: env.token,
+      mode: env.mode,
+      host: env.host,
+      port: env.port,
+    };
+  } else {
+    if (parseArgs.config == undefined) {
+      console.error("BOT_TOKEN environment variable or --config argument required!");
+      process.exit(1);
+    }
+
+    const config = new Config(parseArgs.config);
+    config.consume();
+    data = config.data();
   }
-
-  const config = new Config(parseArgs.config);
-  config.consume();
-
-  const data: BotConfig = config.data();
+  
   const bot = new Bot(data.token);
 
   setupCommands(bot);
   bot.catch((error) => {
-    console.log(error, error.ctx.api);
+    console.error(error, error.ctx.api);
   });
 
   const app = express();
