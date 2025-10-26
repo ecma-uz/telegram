@@ -16,29 +16,46 @@ Ecma Uzbekistan consists of sub-communities which needs moderation tools like te
 
 ## Development
 
-This project has everything configured ready to get started with developer right away thanks to Nix package manager. In order to get started:
+This project has been migrated to Node.js with Grammy.js. To get started:
 
 ```bash
-# Start development environment
-nix develop -c $SHELL
+# Install dependencies
+npm install
 
-# Open favorite editor of your choice
-zed .
+# Create a config.toml file with your bot token
+# Example:
+# token = "YOUR_BOT_TOKEN"
+# mode = "polling"
+# host = "https://your-domain.com"
+# port = 8000
 
-# Start development server
-npm run dev
+# Start development server with hot reload
+npm run dev -- --config config.toml
+
+# Or build and run in production
+npm run build
+npm run start -- --config config.toml
+```
+
+## Configuration
+
+Create a `config.toml` file with your bot configuration:
+
+```toml
+token = "YOUR_BOT_TOKEN_HERE"
+host = "127.0.0.1"
+port = 8000
+mode = "polling"
 ```
 
 ## Building
 
-This project aims to build standalone javascript and deployed in [Kolyma Labs](https://github.com/kolyma-labs). Kolyma's NixOS server gets `nix build` output, but you can build it inside development environment using `npm` package manager.
-
 ```bash
-# Building with nix`
-nix build .
-
-# Building with npm
+# Build for production
 npm run build
+
+# Start production server
+npm start -- --config config.toml
 ```
 
 ## Thanks

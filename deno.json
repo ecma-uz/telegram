@@ -1,9 +1,0 @@
-{
-  "fmt": {
-    "files": {
-      "exclude": [
-        "all.json"
-      ]
-    }
-  }
-}

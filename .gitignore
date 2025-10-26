@@ -1,12 +1,5 @@
-# Direnv garbage
-.direnv
-
-# Environmental files
+node_modules/
+dist/
+*.log
 .env
-
-# Editors
-.idea
-.vscode
-
-# Data file
-config.toml
+.DS_Store
