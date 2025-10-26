@@ -1,5 +1,7 @@
-import { InlineKeyboard } from "../deps";
+import { InlineKeyboard } from "grammy";
 import crypto from "crypto";
+
+type InlineQueryResult = any;
 
 interface File {
   name: string;
@@ -11,16 +13,6 @@ interface Page {
   description: string;
   content: string;
   link: string;
-}
-
-export interface InlineQueryResult {
-  type: string;
-  id: string;
-  title?: string;
-  description?: string;
-  url?: string;
-  reply_markup?: any;
-  input_message_content?: any;
 }
 
 const API_URL = "https://api.github.com/repos/tldr-pages/tldr/contents/pages";
@@ -38,13 +30,13 @@ export class Tealdeer {
     return this.results.length;
   }
 
-  public async query(type: string, page: string) {
+  public async query(type: string, page: string): Promise<string[]> {
     const matches: string[] = [];
     const response = await fetch(`${API_URL}/${type}`);
 
     if (response.status != 200) return [];
 
-    const jsonData: File[] = await response.json();
+    const jsonData = await response.json() as File[];
 
     jsonData.forEach((file) => {
       const fileName = file.name.slice(0, -3);
@@ -104,7 +96,7 @@ export class Tealdeer {
 
   public inline(limit = 49): InlineQueryResult[] {
     return this.results.slice(0, limit).map((page) => ({
-      type: "article",
+      type: "article" as const,
       id: crypto.randomUUID(),
       title: page.title,
       description: page.description,
@@ -119,7 +111,7 @@ export class Tealdeer {
 
   public notFound(query: string): InlineQueryResult[] {
     return [{
-      type: "article",
+      type: "article" as const,
       id: "404tldr",
       title: "Xatolik yuz berdi!",
       description: `Ushbu ${query} ga oid sahifa topilmadi!`,
@@ -139,7 +131,7 @@ export class Tealdeer {
 
   public noQuery(): InlineQueryResult[] {
     return [{
-      type: "article",
+      type: "article" as const,
       id: "102",
       title: "Qidirishni boshlang!",
       description: "Qidirmoqchi bo'lgan tldr sahifa nomini yozing!",

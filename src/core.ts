@@ -1,14 +1,10 @@
-import { Bot } from "./deps";
-import delta from "./delta/mod";
+import { Bot } from "grammy";
+import { setupModules } from "./delta/mod";
 import { Config, Configs } from "./utils/config";
 import args from "./utils/cli";
 import express from "express";
 
-const handle = (bot: Bot, express: express.Express) => {
-  return express.raw({ type: "application/json" });
-};
-
-const webhook = (bot: Bot, config: Configs, app: express.Express) => {
+function setupWebhook(bot: Bot, config: Configs, app: express.Express): void {
   console.log(`[INFO] bot is starting on ${config.mode}`);
   
   app.use(express.json());
@@ -37,11 +33,11 @@ const webhook = (bot: Bot, config: Configs, app: express.Express) => {
   });
 };
 
-const polling = async (bot: Bot) => {
+async function startPolling(bot: Bot): Promise<void> {
   await bot.start();
-};
+}
 
-const launch = async () => {
+async function launch(): Promise<void> {
   if (args.config == undefined) {
     console.log("Path to config file is not defined!");
     process.exit(1);
@@ -53,7 +49,7 @@ const launch = async () => {
   const data: Configs = config.data();
   const bot = new Bot(data.token);
 
-  delta(bot);
+  setupModules(bot);
   bot.catch((error) => {
     console.log(error, error.ctx.api);
   });
@@ -62,13 +58,13 @@ const launch = async () => {
 
   switch (data.mode) {
     case "webhook":
-      webhook(bot, data, app);
+      setupWebhook(bot, data, app);
       break;
     case "polling":
-      await polling(bot);
+      await startPolling(bot);
       break;
     default:
-      throw new Error("Deploy method not validated!");
+      throw new Error(`Invalid deployment mode: ${data.mode}`);
   }
 };
 

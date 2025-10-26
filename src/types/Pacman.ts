@@ -1,6 +1,8 @@
 import normalize from "../utils/normalize";
-import { InlineKeyboard } from "../deps";
+import { InlineKeyboard } from "grammy";
 import crypto from "crypto";
+
+type InlineQueryResult = any;
 
 export interface Package {
   name: string;
@@ -13,16 +15,6 @@ export interface Package {
   install: string;
   url?: string;
   type: string;
-}
-
-export interface InlineQueryResult {
-  type: string;
-  id: string;
-  title?: string;
-  description?: string;
-  url?: string;
-  reply_markup?: any;
-  input_message_content?: any;
 }
 
 export class Search {
@@ -48,7 +40,7 @@ export class Pacman {
 
   public inline(limit = 49): InlineQueryResult[] {
     return this.results.slice(0, limit).map((item: Package) => ({
-      type: "article",
+      type: "article" as const,
       id: crypto.randomUUID(),
       title: item.name,
       url: normalize(item),
@@ -76,7 +68,7 @@ export class Pacman {
 
   public notFound(query: string): InlineQueryResult[] {
     return [{
-      type: "article",
+      type: "article" as const,
       id: "404",
       title: "Xatolik yuz berdi!",
       description: `Ushbu ${query} ga oid natija topilmadi!`,
@@ -95,7 +87,7 @@ export class Pacman {
 
   public noQuery(): InlineQueryResult[] {
     return [{
-      type: "article",
+      type: "article" as const,
       id: "102",
       title: "Qidirishni boshlang!",
       description: "Qidirmoqchi bo'lgan tldr sahifa nomini yozing!",

@@ -1,7 +1,6 @@
-import { Composer, Context } from "../deps";
+import { Composer, Context } from "grammy";
 import { Pacman } from "../types/Pacman";
 import { Tealdeer } from "../types/Tealdeer";
-import crypto from "crypto";
 
 const composer = new Composer();
 

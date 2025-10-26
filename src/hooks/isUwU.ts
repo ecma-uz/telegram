@@ -1,4 +1,4 @@
-import { Context, NextFunction } from "../deps";
+import { Context, NextFunction } from "grammy";
 import { reply } from "../utils/sender";
 
 export default async (ctx: Context, next: NextFunction) => {

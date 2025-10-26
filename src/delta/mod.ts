@@ -2,7 +2,7 @@ import start from "./start";
 import help from "./help";
 import inline from "./inline";
 import which from "./which";
-import { Bot } from "../deps";
+import { Bot } from "grammy";
 import about from "./about";
 import rules from "./rules";
 import text from "./text";
@@ -13,7 +13,7 @@ import trigger from "./trigger";
 import feedback from "./feedback";
 import code from "./code";
 
-export default (bot: Bot) => {
+export const setupModules = (bot: Bot): void => {
   bot
     .use(start)
     .use(honor)
@@ -28,4 +28,4 @@ export default (bot: Bot) => {
     .use(trigger)
     .use(code)
     .use(text);
-};
+}

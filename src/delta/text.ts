@@ -1,4 +1,4 @@
-import { Composer, Context } from "../deps";
+import { Composer, Context } from "grammy";
 import topics from "../../topics.json";
 
 const composer = new Composer();

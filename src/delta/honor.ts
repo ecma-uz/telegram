@@ -1,4 +1,4 @@
-import { Composer, Context } from "../deps";
+import { Composer, Context } from "grammy";
 import isAdmin from "../hooks/isAdmin";
 import isReply from "../hooks/isReply";
 import isGroup from "../hooks/isGroup";

@@ -1,4 +1,4 @@
-import { Context, InlineKeyboard } from "../deps";
+import { Context, InlineKeyboard } from "grammy";
 
 /**
  * Reply to message api but with topics support

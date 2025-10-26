@@ -1,4 +1,4 @@
-import { Context, NextFunction, InlineKeyboard } from "../deps";
+import { Context, NextFunction, InlineKeyboard } from "grammy";
 import { reply } from "../utils/sender";
 
 const keyboard = new InlineKeyboard().url(

@@ -1,4 +1,4 @@
-import { Composer, Context } from "../deps";
+import { Composer, Context } from "grammy";
 import isGroup from "../hooks/isGroup";
 
 const composer = new Composer();

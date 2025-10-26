@@ -1,4 +1,4 @@
-import { Composer, Context } from "../deps";
+import { Composer, Context } from "grammy";
 import * as start from "./start";
 
 const composer = new Composer();

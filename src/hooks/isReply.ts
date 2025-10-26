@@ -1,5 +1,5 @@
 import { reply } from "../utils/sender";
-import { Context, NextFunction } from "../deps";
+import { Context, NextFunction } from "grammy";
 import topics from "../../topics.json";
 
 export default async (ctx: Context, next: NextFunction) => {

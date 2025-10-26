@@ -1,8 +1,7 @@
-import { Composer, Context, InlineKeyboard } from "../deps";
+import { Composer, Context, InlineKeyboard } from "grammy";
 
 const composer = new Composer();
 
-// Placeholder for Groups API - needs implementation
 interface Group {
   name: string;
   packs: number;
@@ -10,12 +9,10 @@ interface Group {
 
 class GroupsAPI {
   static async groups(page: number): Promise<Group[]> {
-    // This is a placeholder - you'll need to implement the actual API call
     return [];
   }
 
   static async group(name: string): Promise<any> {
-    // This is a placeholder - you'll need to implement the actual API call
     return { arch: "", name: "", packs: [] };
   }
 }
@@ -56,11 +53,9 @@ composer.command("groups", async (ctx: Context): Promise<void> => {
 composer.callbackQuery(
   /^groups_(\d+)$/,
   async (ctx: Context): Promise<void> => {
-    // Arguments
     const page = Number(ctx.match![1]);
     const keyboard = new InlineKeyboard();
 
-    // Data
     const groups = await Groups.groups(page);
     const nextLength = (await Groups.groups(page - 1)).length;
     const prevLength = (await Groups.groups(page + 1)).length;

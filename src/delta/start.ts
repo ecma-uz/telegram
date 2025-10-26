@@ -1,4 +1,4 @@
-import { Composer, Context, InlineKeyboard } from "../deps";
+import { Composer, Context, InlineKeyboard } from "grammy";
 
 const composer = new Composer();
 

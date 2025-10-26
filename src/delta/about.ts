@@ -1,4 +1,4 @@
-import { Composer, Context, InlineKeyboard } from "../deps";
+import { Composer, Context, InlineKeyboard } from "grammy";
 import isPrivate from "../hooks/isPrivate";
 
 const composer = new Composer();

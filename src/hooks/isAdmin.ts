@@ -1,4 +1,4 @@
-import { Context, NextFunction } from "../deps";
+import { Context, NextFunction } from "grammy";
 
 export default async (ctx: Context, next: NextFunction) => {
   const adminList = await ctx.getChatAdministrators();

@@ -1,4 +1,4 @@
-import { Composer, Context, InputFile } from "../deps";
+import { Composer, Context, InputFile } from "grammy";
 import isUwU from "../hooks/isUwU";
 import isReply from "../hooks/isReply";
 

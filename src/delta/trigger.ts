@@ -1,7 +1,7 @@
 import { reply } from "../utils/sender";
 import isReply from "../hooks/isReply";
 import topics from "../../topics.json";
-import { Composer, Context, InlineKeyboard } from "../deps";
+import { Composer, Context, InlineKeyboard } from "grammy";
 
 const composer = new Composer();
 
