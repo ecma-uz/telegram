@@ -1,7 +1,7 @@
 import { Composer, Context } from "grammy";
-import isAdmin from "../hooks/isAdmin";
-import isReply from "../hooks/isReply";
-import isGroup from "../hooks/isGroup";
+import isAdmin from "../middleware/isAdmin";
+import isReply from "../middleware/isReply";
+import isGroup from "../middleware/isGroup";
 
 const composer = new Composer();
 

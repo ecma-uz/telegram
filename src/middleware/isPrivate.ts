@@ -1,5 +1,5 @@
 import { Context, NextFunction, InlineKeyboard } from "grammy";
-import { reply } from "../utils/sender";
+import { replyWithTopic } from "../handlers/reply";
 
 const keyboard = new InlineKeyboard().url(
   `Shaxsiy Chat`,
@@ -8,7 +8,7 @@ const keyboard = new InlineKeyboard().url(
 
 export default async (ctx: Context, next: NextFunction) => {
   if (ctx.chat!.type !== "private") {
-    return await reply(
+    return await replyWithTopic(
       ctx,
       `⚠️ Bu komanda faqat shaxsiy chat uchun!`,
       keyboard,

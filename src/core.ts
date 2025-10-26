@@ -1,11 +1,11 @@
 import { Bot } from "grammy";
-import { setupModules } from "./delta/mod";
-import { Config, Configs } from "./utils/config";
-import args from "./utils/cli";
+import { setupCommands } from "./commands";
+import Config, { BotConfig } from "./config/config";
+import parseArgs from "./config/cli";
 import express from "express";
 
-function setupWebhook(bot: Bot, config: Configs, app: express.Express): void {
-  console.log(`[INFO] bot is starting on ${config.mode}`);
+function setupWebhook(bot: Bot, config: BotConfig, app: express.Express): void {
+  console.info(`[INFO] bot is starting on ${config.mode}`);
   
   app.use(express.json());
   
@@ -38,18 +38,18 @@ async function startPolling(bot: Bot): Promise<void> {
 }
 
 async function launch(): Promise<void> {
-  if (args.config == undefined) {
+  if (parseArgs.config == undefined) {
     console.log("Path to config file is not defined!");
     process.exit(1);
   }
 
-  const config = new Config(args.config);
+  const config = new Config(parseArgs.config);
   config.consume();
 
-  const data: Configs = config.data();
+  const data: BotConfig = config.data();
   const bot = new Bot(data.token);
 
-  setupModules(bot);
+  setupCommands(bot);
   bot.catch((error) => {
     console.log(error, error.ctx.api);
   });

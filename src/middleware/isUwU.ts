@@ -1,9 +1,9 @@
 import { Context, NextFunction } from "grammy";
-import { reply } from "../utils/sender";
+import { replyWithTopic } from "../handlers/reply";
 
 export default async (ctx: Context, next: NextFunction) => {
   if (ctx.message!.from!.id! !== 756870298) {
-    return await reply(ctx, `⚠️ Bu komanda faqat Xinux Asoschisi uchun!`);
+    return await replyWithTopic(ctx, `⚠️ Bu komanda faqat Xinux Asoschisi uchun!`);
   }
   await next();
 };

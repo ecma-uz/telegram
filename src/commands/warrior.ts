@@ -1,6 +1,6 @@
 import { Composer, Context, InputFile } from "grammy";
-import isUwU from "../hooks/isUwU";
-import isReply from "../hooks/isReply";
+import isUwU from "../middleware/isUwU";
+import isReply from "../middleware/isReply";
 
 const composer = new Composer();
 

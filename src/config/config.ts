@@ -1,18 +1,18 @@
 import * as fs from "fs";
 import { parse } from "toml";
 
-export interface Configs {
+export interface BotConfig {
   port: number;
-  mode: string;
+  mode: "webhook" | "polling";
   host: string;
   token: string;
 }
 
-export class Config {
+export default class Config {
   private path: string;
   private host: string;
   private port: number;
-  private mode: string;
+  private mode: "webhook" | "polling";
   private token: string;
 
   constructor(path: string) {
@@ -25,7 +25,7 @@ export class Config {
 
   consume(): void {
     if (!fs.existsSync(this.path)) {
-      console.log("Does even your config file exists?");
+      console.error("Config file does not exist:", this.path);
       process.exit(1);
     }
 
@@ -33,12 +33,12 @@ export class Config {
     const data = parse(read) as any;
 
     this.port = data.port as number;
-    this.mode = data.mode as string;
+    this.mode = data.mode as "webhook" | "polling";
     this.host = data.host as string;
     this.token = data.token as string;
   }
 
-  data(): Configs {
+  data(): BotConfig {
     return {
       host: this.host,
       port: this.port,
@@ -47,5 +47,3 @@ export class Config {
     };
   }
 }
-
-export default Config;

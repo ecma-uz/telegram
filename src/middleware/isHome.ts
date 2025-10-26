@@ -1,5 +1,5 @@
 import { Context, NextFunction, InlineKeyboard } from "grammy";
-import { reply } from "../utils/sender";
+import { replyWithTopic } from "../handlers/reply";
 
 const keyboard = new InlineKeyboard().url(
   `Guruhimizga o'ting`,
@@ -8,7 +8,7 @@ const keyboard = new InlineKeyboard().url(
 
 export default async (ctx: Context, next: NextFunction) => {
   if (ctx.chat!.id !== -1001174263940) {
-    return await reply(
+    return await replyWithTopic(
       ctx,
       `⚠️ Bu komanda faqat o'zimizni guruh uchun`,
       keyboard,

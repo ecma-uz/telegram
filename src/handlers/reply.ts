@@ -1,16 +1,16 @@
 import { Context, InlineKeyboard } from "grammy";
 
 /**
- * Reply to message api but with topics support
- * @param ctx Context from Grammy.js middleware
- * @param message The message you want to send
- * @param buttons InlineKeyboard button to attach to the message
+ * Reply to message with topic support
+ * @param ctx - Grammy context
+ * @param message - Message text
+ * @param buttons - Optional inline keyboard
  */
-export const reply = async (
+export async function replyWithTopic(
   ctx: Context,
   message: string,
   buttons?: InlineKeyboard,
-): Promise<any> => {
+): Promise<any> {
   const config: { [key: string]: any } = {
     parse_mode: "HTML",
   };
@@ -24,4 +24,5 @@ export const reply = async (
   }
 
   return await ctx.reply(message, config);
-};
+}
+

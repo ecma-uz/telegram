@@ -14,7 +14,7 @@
     "bot",
     "grammy"
   ],
-  "author": "",
+  "author": "Ecma Uzbekistan Jamiyati",
   "license": "MIT",
   "dependencies": {
     "grammy": "^1.36.1",

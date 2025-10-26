@@ -1,5 +1,5 @@
 import { Composer, Context } from "grammy";
-import isGroup from "../hooks/isGroup";
+import isGroup from "../middleware/isGroup";
 
 const composer = new Composer();
 

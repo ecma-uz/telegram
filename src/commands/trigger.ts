@@ -1,6 +1,6 @@
-import { reply } from "../utils/sender";
-import isReply from "../hooks/isReply";
-import topics from "../../topics.json";
+import { replyWithTopic } from "../handlers/reply";
+import isReply from "../middleware/isReply";
+import topics from "../topics.json";
 import { Composer, Context, InlineKeyboard } from "grammy";
 
 const composer = new Composer();
@@ -17,7 +17,7 @@ composer.command(
       : ctx.match!.join(" ");
 
     if (!Object.keys(topics).includes(requestedTopic)) {
-      return await reply(
+      return await replyWithTopic(
         ctx,
         `<b>Bunaqangi topic bizda borga o'xshamaydiyov...\n\nBizda faqat quyidagi topic (mavzu)lar bor:</b>` +
           `\n` + `<i>${Object.keys(registeredTopics).join(" | ")}</i>`,
@@ -33,7 +33,7 @@ composer.command(
 
     if (ctx?.message?.reply_to_message?.from?.id === ctx.me.id) {
       if (ctx.message) {
-        return await reply(ctx, `Ha-ha... yaxshi urinish!`);
+        return await replyWithTopic(ctx, `Ha-ha... yaxshi urinish!`);
       }
     }
 
@@ -64,13 +64,13 @@ composer.command(
       `https://t.me/xinuxuz/${requestedTopicURL}`,
     );
 
-    return await reply(ctx, text, keyboard);
+    return await replyWithTopic(ctx, text, keyboard);
   },
 );
 
 composer.command("doc", isReply, async (ctx: Context): Promise<any> => {
   if (ctx?.message?.reply_to_message?.from?.id === ctx.me.id) {
-    return await reply(ctx, `Ha-ha... yaxshi urinish!`);
+    return await replyWithTopic(ctx, `Ha-ha... yaxshi urinish!`);
   } else {
     await ctx.api.deleteMessage(
       ctx.message!.chat!.id,
@@ -88,7 +88,7 @@ composer.command("doc", isReply, async (ctx: Context): Promise<any> => {
       `javob olsa bo'larkanda. Yanachi, unga avtorlar shunchalik ko'p vaqt ajratishar ` +
       `ekanu, lekin uni sanoqligina odam o'qisharkan. Attang...</i>`;
 
-    return await reply(ctx, text);
+    return await replyWithTopic(ctx, text);
   }
 });
 

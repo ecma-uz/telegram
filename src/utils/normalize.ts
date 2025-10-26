@@ -7,7 +7,7 @@ interface Package {
   type: string;
 }
 
-const normalize = (pack: Package): string => {
+export default function normalize(pack: Package): string {
   if (pack.type === "aur") {
     if (pack.url) return pack.url;
     else return `https://aur.archlinux.org/packages/${pack.name}`;
@@ -21,6 +21,5 @@ const normalize = (pack: Package): string => {
   }
 
   return "https://archlinux.org/";
-};
+}
 
-export default normalize;

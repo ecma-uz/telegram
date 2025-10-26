@@ -1,6 +1,6 @@
 import { Composer, Context, InlineKeyboard } from "grammy";
-import isPrivate from "../hooks/isPrivate";
-import { reply } from "../utils/sender";
+import isPrivate from "../middleware/isPrivate";
+import { replyWithTopic } from "../handlers/reply";
 
 const composer = new Composer();
 
@@ -20,7 +20,7 @@ export const keyboard = new InlineKeyboard().url(
 );
 
 composer.command("feedback", isPrivate, async (ctx: Context): Promise<any> => {
-  return await reply(ctx, message(ctx), keyboard);
+  return await replyWithTopic(ctx, message(ctx), keyboard);
 });
 
 export default composer;

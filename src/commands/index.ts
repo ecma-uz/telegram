@@ -1,19 +1,18 @@
 import start from "./start";
 import help from "./help";
-import inline from "./inline";
-import which from "./which";
-import { Bot } from "grammy";
 import about from "./about";
 import rules from "./rules";
-import text from "./text";
-import groups from "./groups";
+import which from "./which";
 import honor from "./honor";
 import warrior from "./warrior";
-import trigger from "./trigger";
+import inline from "./inline";
+import groups from "./groups";
 import feedback from "./feedback";
+import trigger from "./trigger";
 import code from "./code";
+import text from "./text";
 
-export const setupModules = (bot: Bot): void => {
+export function setupCommands(bot: any): void {
   bot
     .use(start)
     .use(honor)
@@ -29,3 +28,4 @@ export const setupModules = (bot: Bot): void => {
     .use(code)
     .use(text);
 }
+
