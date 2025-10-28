@@ -6,13 +6,13 @@ export const message: string =
   `<b>Assalomu alaykum, hurmatli administrator!</b> \n` +
   `\n` +
   `Sizni ko'rib turganimdan bag'oyatda xursandman. ` +
-  `Men Xinux Jamiyati tomonidan yaratilgan bot hisoblanib, ` +
-  `Xinux Jamiyati foydalanuvchilari uchun foydali resurslarni yetkazish, saqlash va ` +
+  `Men Ecma.uz hamjamiyati tomonidan yaratilgan bot hisoblanib, ` +
+  `Ecma hamjamiyati foydalanuvchilari uchun foydali resurslarni yetkazish, saqlash va ` +
   `ularni saralash uchun xizmat qilaman.`;
 
 export const keyboard = new InlineKeyboard()
-  .url("Jamiyat", "https://t.me/xinuxuz")
-  .url("Web Sahifa", "https://xinux.uz");
+  .url("React hamjamiyati", "https://t.me/react_uz")
+  .url("Node.js hamjamiyati", "https://t.me/nodejs_uz");
 
 composer.command("start", async (ctx: Context): Promise<void> => {
   if (ctx.message?.message_thread_id) {

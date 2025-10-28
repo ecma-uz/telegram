@@ -20,7 +20,6 @@ export interface Package {
 
 export class SearchService {
   static async search(query: string): Promise<Package[]> {
-    // Implement Arch Linux package search
     return [];
   }
 }
@@ -49,10 +48,10 @@ export class PacmanSearch {
       description: item.desc,
       reply_markup: new InlineKeyboard().url(`Web Sahifasi`, normalize(item)),
       input_message_content: {
-        message_text: `<b>Nomi:</b> ${item.name}` +
+        message_text:
+          `<b>Nomi:</b> ${item.name}` +
           `\n` +
-          (item.version &&
-            "<b>Versiyasi:</b> " + item.version + `\n`) +
+          (item.version && "<b>Versiyasi:</b> " + item.version + `\n`) +
           (item.desc && "<b>Ma'lumot:</b> " + item.desc + `\n`) +
           (item.repo ? "<b>Repozitoriya:</b> " + item.repo + `\n` : "") +
           (item.updated &&
@@ -69,47 +68,53 @@ export class PacmanSearch {
   }
 
   public getNotFound(query: string): InlineQueryResult[] {
-    return [{
-      type: "article" as const,
-      id: "404",
-      title: "Xatolik yuz berdi!",
-      description: `Ushbu ${query} ga oid natija topilmadi!`,
-      reply_markup: new InlineKeyboard().switchInlineCurrent(
-        "Qayta urinib ko'ramizmi?",
-        "foobar",
-      ),
-      input_message_content: {
-        message_text: `<b>"${query}" ga oid natija mavjud emas!</b>` +
-          `\n` +
-          `Iltimos, boshqattan ushbu qidirmoqchi bo'lgan paketingiz yozib qidirib ko'ring.`,
-        parse_mode: "HTML",
+    return [
+      {
+        type: "article" as const,
+        id: "404",
+        title: "Xatolik yuz berdi!",
+        description: `Ushbu ${query} ga oid natija topilmadi!`,
+        reply_markup: new InlineKeyboard().switchInlineCurrent(
+          "Qayta urinib ko'ramizmi?",
+          "foobar",
+        ),
+        input_message_content: {
+          message_text:
+            `<b>"${query}" ga oid natija mavjud emas!</b>` +
+            `\n` +
+            `Iltimos, boshqattan ushbu qidirmoqchi bo'lgan paketingiz yozib qidirib ko'ring.`,
+          parse_mode: "HTML",
+        },
       },
-    }];
+    ];
   }
 
   public getEmptyQuery(): InlineQueryResult[] {
-    return [{
-      type: "article" as const,
-      id: "102",
-      title: "Qidirishni boshlang!",
-      description: "Qidirmoqchi bo'lgan tldr sahifa nomini yozing!",
-      reply_markup: new InlineKeyboard().switchInlineCurrent(
-        "Qayta urinib ko'ramizmi?",
-        "foobar",
-      ),
-      input_message_content: {
-        message_text: `<b>Salom foydalanuvchi!</b>` +
-          `\n` +
-          `Siz inline rejim ishga tushurdingiz. Ushbu qulaylik yordamida siz ` +
-          `tldr sahifasiga kirmasdan turib telegramdan tldr sahifalarini ` +
-          `qidirish imkoniga ega bo'lasiz! Qidirishni boshlash uchun ` +
-          `\n` +
-          `<code>@xeonittebot \/tldr &lt;sahifa nomi&gt;</code>` +
-          `\n` +
-          `yozasiz`,
-        parse_mode: "HTML",
+    return [
+      {
+        type: "article" as const,
+        id: "102",
+        title: "Qidirishni boshlang!",
+        description: "Qidirmoqchi bo'lgan tldr sahifa nomini yozing!",
+        reply_markup: new InlineKeyboard().switchInlineCurrent(
+          "Qayta urinib ko'ramizmi?",
+          "foobar",
+        ),
+        input_message_content: {
+          message_text:
+            `<b>Salom foydalanuvchi!</b>` +
+            `\n` +
+            `Siz inline rejim ishga tushurdingiz. Ushbu qulaylik yordamida siz ` +
+            `tldr sahifasiga kirmasdan turib telegramdan tldr sahifalarini ` +
+            `qidirish imkoniga ega bo'lasiz! Qidirishni boshlash uchun ` +
+            `\n` +
+            `<code>@xeonittebot \/tldr &lt;sahifa nomi&gt;</code>` +
+            `\n` +
+            `yozasiz`,
+          parse_mode: "HTML",
+        },
       },
-    }];
+    ];
   }
 }
 
@@ -126,11 +131,13 @@ export class TealdeerSearch {
 
   public async query(type: string, page: string): Promise<string[]> {
     const matches: string[] = [];
-    const response = await fetch(`https://api.github.com/repos/tldr-pages/tldr/contents/pages/${type}`);
+    const response = await fetch(
+      `https://api.github.com/repos/tldr-pages/tldr/contents/pages/${type}`,
+    );
 
     if (response.status != 200) return [];
 
-    const jsonData = await response.json() as any[];
+    const jsonData = (await response.json()) as any[];
 
     jsonData.forEach((file) => {
       const fileName = file.name.slice(0, -3);
@@ -147,7 +154,9 @@ export class TealdeerSearch {
   }
 
   public async getPage(type: string, page: string): Promise<any> {
-    const response = await fetch(`https://raw.githubusercontent.com/tldr-pages/tldr/main/pages/${type}/${page}.md`);
+    const response = await fetch(
+      `https://raw.githubusercontent.com/tldr-pages/tldr/main/pages/${type}/${page}.md`,
+    );
     const responseText = await response.text();
     const lines = responseText.split("\n").map((line) => {
       if (line.startsWith(">")) {
@@ -201,48 +210,53 @@ export class TealdeerSearch {
   }
 
   public getNotFound(query: string): InlineQueryResult[] {
-    return [{
-      type: "article" as const,
-      id: "404tldr",
-      title: "Xatolik yuz berdi!",
-      description: `Ushbu ${query} ga oid sahifa topilmadi!`,
-      reply_markup: new InlineKeyboard().switchInlineCurrent(
-        "Qayta urinib ko'ramizmi?",
-        "ls",
-      ),
-      input_message_content: {
-        message_text: `<b>"${query}" ga oid natija mavjud emas!</b>` +
-          `\n` +
-          `Iltimos, boshqattan ushbu qidirmoqchi bo'lgan tldr sahifa` +
-          `nomini yozib qidirib ko'ring.`,
-        parse_mode: "HTML",
+    return [
+      {
+        type: "article" as const,
+        id: "404tldr",
+        title: "Xatolik yuz berdi!",
+        description: `Ushbu ${query} ga oid sahifa topilmadi!`,
+        reply_markup: new InlineKeyboard().switchInlineCurrent(
+          "Qayta urinib ko'ramizmi?",
+          "ls",
+        ),
+        input_message_content: {
+          message_text:
+            `<b>"${query}" ga oid natija mavjud emas!</b>` +
+            `\n` +
+            `Iltimos, boshqattan ushbu qidirmoqchi bo'lgan tldr sahifa` +
+            `nomini yozib qidirib ko'ring.`,
+          parse_mode: "HTML",
+        },
       },
-    }];
+    ];
   }
 
   public getEmptyQuery(): InlineQueryResult[] {
-    return [{
-      type: "article" as const,
-      id: "102",
-      title: "Qidirishni boshlang!",
-      description: "Qidirmoqchi bo'lgan tldr sahifa nomini yozing!",
-      reply_markup: new InlineKeyboard().switchInlineCurrent(
-        "Qayta urinib ko'ramizmi?",
-        "ls",
-      ),
-      input_message_content: {
-        message_text: `<b>Salom foydalanuvchi!</b>` +
-          `\n` +
-          `Siz inline rejim ishga tushurdingiz. Ushbu qulaylik yordamida siz ` +
-          `tldr sahifasiga kirmasdan turib telegramdan tldr sahifalarini ` +
-          `qidirish imkoniga ega bo'lasiz! Qidirishni boshlash uchun ` +
-          `\n` +
-          `<code>@xeonittebot \/tldr &lt;sahifa nomi&gt;</code>` +
-          `\n` +
-          `yozasiz`,
-        parse_mode: "HTML",
+    return [
+      {
+        type: "article" as const,
+        id: "102",
+        title: "Qidirishni boshlang!",
+        description: "Qidirmoqchi bo'lgan tldr sahifa nomini yozing!",
+        reply_markup: new InlineKeyboard().switchInlineCurrent(
+          "Qayta urinib ko'ramizmi?",
+          "ls",
+        ),
+        input_message_content: {
+          message_text:
+            `<b>Salom foydalanuvchi!</b>` +
+            `\n` +
+            `Siz inline rejim ishga tushurdingiz. Ushbu qulaylik yordamida siz ` +
+            `tldr sahifasiga kirmasdan turib telegramdan tldr sahifalarini ` +
+            `qidirish imkoniga ega bo'lasiz! Qidirishni boshlash uchun ` +
+            `\n` +
+            `<code>@xeonittebot \/tldr &lt;sahifa nomi&gt;</code>` +
+            `\n` +
+            `yozasiz`,
+          parse_mode: "HTML",
+        },
       },
-    }];
+    ];
   }
 }
-
