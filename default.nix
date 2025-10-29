@@ -7,6 +7,6 @@ in
     src = ./.;
 
     denoDepsHash = lib.fakeHash;
-    binaryEntrypointPath = "./mod.ts";
+    binaryEntrypointPath = "./main.ts";
     permissions.allow.all = true;
   }
