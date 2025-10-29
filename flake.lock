@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "deno-fetcher": {
+      "locked": {
+        "lastModified": 1761042771,
+        "narHash": "sha256-17HD3Jc0EQ50NOSBAwama3apyMhlTYQ1LxVM3xCipI4=",
+        "owner": "aMOPel",
+        "repo": "nixpkgs",
+        "rev": "5ea49496373a00cc0019f13070b4e01c1ed540ff",
+        "type": "github"
+      },
+      "original": {
+        "owner": "aMOPel",
+        "ref": "feat/fetchDenoDeps",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "inputs": {
         "systems": "systems"
@@ -70,6 +86,7 @@
     },
     "root": {
       "inputs": {
+        "deno-fetcher": "deno-fetcher",
         "flake-utils": "flake-utils",
         "nix-deno": "nix-deno",
         "nixpkgs": "nixpkgs_2"
