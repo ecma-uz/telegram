@@ -4,12 +4,12 @@ import { Tealdeer } from "../types/Tealdeer.ts";
 
 const composer = new Composer();
 
-composer.inlineQuery(/(.*)/ig, async (ctx: Context) => {
+composer.inlineQuery(/(.*)/gi, async (ctx: Context) => {
   let search: string | undefined;
   let instance: Pacman | Tealdeer = new Pacman();
 
   if (!ctx.inlineQuery?.query) {
-    return await ctx.answerInlineQuery(await instance.noQuery());
+    return await ctx.answerInlineQuery(instance.noQuery());
   }
 
   const split = ctx.inlineQuery?.query.split(" ");
@@ -25,15 +25,13 @@ composer.inlineQuery(/(.*)/ig, async (ctx: Context) => {
       break;
   }
 
-  await instance.search(search);
+  await instance.search(search!);
 
   if (instance.getLength() === 0) {
-    return await ctx.answerInlineQuery(await instance.notFound(search));
+    return await ctx.answerInlineQuery(instance.notFound(search!));
   }
 
-  return await ctx.answerInlineQuery(
-    await instance.inline(),
-  );
+  return await ctx.answerInlineQuery(instance.inline());
 });
 
 export default composer;

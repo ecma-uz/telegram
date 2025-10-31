@@ -3,7 +3,8 @@ import isPrivate from "../hooks/isPrivate.ts";
 
 const composer = new Composer();
 
-export const message = `<b>Hurmatli foydalanuvchi!</b> \n` +
+export const message =
+  `<b>Hurmatli foydalanuvchi!</b> \n` +
   `\n` +
   `Bizning botimiz aktiv tarzda shakllantirib boriladi. ` +
   `Buning ustida esa bir necha avtor va dasturchilar turadi, ` +
@@ -12,7 +13,7 @@ export const message = `<b>Hurmatli foydalanuvchi!</b> \n` +
 
 export const keyboard = new InlineKeyboard().url(
   `Ochiq Havolalar`,
-  `https://github.com/xinuxuz/xeonitte`,
+  `https://github.com/ecma-uz/telegram`,
 );
 
 composer.command("about", isPrivate, async (ctx: Context): Promise<void> => {

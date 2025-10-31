@@ -7,7 +7,6 @@ import about from "./about.ts";
 import rules from "./rules.ts";
 import text from "./text.ts";
 import groups from "./groups.ts";
-import honor from "./honor.ts";
 import warrior from "./warrior.ts";
 import trigger from "./trigger.ts";
 import feedback from "./feedback.ts";
@@ -16,7 +15,6 @@ import code from "./code.ts";
 export default (bot: Bot) => {
   bot
     .use(start)
-    .use(honor)
     .use(help)
     .use(groups)
     .use(inline)

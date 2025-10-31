@@ -3,7 +3,8 @@ import isPrivate from "../hooks/isPrivate.ts";
 
 const composer = new Composer();
 
-export const message = `<b>Hurmatli guruh a'zosi...</b> ` +
+export const message =
+  `<b>Hurmatli guruh a'zosi...</b> ` +
   `\n` +
   `\n` +
   `Iltimos qoidalarga oz bo'lsada vaqt ajratishni unutmang, bu muhim! Ushbu guruhda quyidagi harakatlar taqiqlanadi:` +
@@ -13,7 +14,7 @@ export const message = `<b>Hurmatli guruh a'zosi...</b> ` +
   `\n` +
   `<code>* Sababsiz guruhga spam yozaverish yoki tashash</code>` +
   `\n` +
-  `<code>* So'ralgan narsani yana qayta ezmalash</code> ` +
+  `<code>* So'ralgan narsani yana qayta esmalash</code> ` +
   `\n` +
   `<code>* Administratorlarga nisbatan juddayam qattiq kritika</code>` +
   `\n` +
@@ -24,7 +25,7 @@ export const message = `<b>Hurmatli guruh a'zosi...</b> ` +
 
 export const keyboard = new InlineKeyboard().url(
   `Guruhga qaytish`,
-  `https://t.me/xinuxuz/178640`,
+  `https://t.me/react_uz`,
 );
 
 composer.command("rules", isPrivate, async (ctx: Context): Promise<void> => {
