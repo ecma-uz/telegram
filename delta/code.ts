@@ -116,7 +116,8 @@ composer.command("code", async (ctx: Context) => {
     const exitCode = outputjson.run.code;
 
     // send the output
-    const message = `<strong>Til</strong>: ${outputjson.language}\n` +
+    const message =
+      `<strong>Til</strong>: ${outputjson.language}\n` +
       `<strong>Versiya:</strong> ${outputjson.version}\n` +
       `<strong>Natija:</strong>\n` +
       `   <strong>stdout:</strong> ${stdout}` +
