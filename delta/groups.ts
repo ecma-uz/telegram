@@ -1,21 +1,32 @@
-import { Composer, Context, Groups, InlineKeyboard } from "../deps.ts";
+import { Composer, Context, InlineKeyboard } from "../deps.ts";
+import communities from "../data/communities.json" with { type: "json" };
 
 const composer = new Composer();
 
+const PAGE_SIZE = 10;
+
+const getCommunitiesPage = (page: number) => {
+  const start = (page - 1) * PAGE_SIZE;
+  const end = start + PAGE_SIZE;
+  const items = communities.slice(start, end);
+  const prevExists = page > 1;
+  const nextExists = end < communities.length;
+  return { items, prevExists, nextExists };
+};
+
 composer.command("groups", async (ctx: Context): Promise<void> => {
+  const page = 1;
+  const { items, nextExists } = getCommunitiesPage(page);
   const keyboard = new InlineKeyboard();
 
   try {
-    const groups = await Groups.groups(1);
-    const nextLength = (await Groups.groups(2)).length;
-
-    for (const group of groups) {
-      keyboard.text(`${group.name} (${group.packs})`, `group_1_${group.name}`);
+    for (const community of items) {
+      keyboard.text(community.name, `group_${page}_${community.name}`);
       keyboard.row();
     }
 
-    if (nextLength > 0) {
-      keyboard.text("Keyingi ➡️", "groups_2");
+    if (nextExists) {
+      keyboard.text("Keyingi ➡️", `groups_${page + 1}`);
     }
 
     const text = "Ushbu ro'yxatdan kerakli guruhni tanlab oling";
@@ -35,7 +46,7 @@ composer.command("groups", async (ctx: Context): Promise<void> => {
   } catch (error) {
     console.error("[groups] fetch failed:", error);
     await ctx.reply(
-      "⚠️ Hozircha guruhlar ro'yxatini olib bo'lmadi. Keyinroq yana /groups buyrug'ini bering.",
+      "Hozircha guruhlar ro'yxatini olib bo'lmadi. Keyinroq yana /groups buyrug'ini bering.",
     );
   }
 });
@@ -44,25 +55,19 @@ composer.callbackQuery(
   /^groups_(\d+)$/,
   async (ctx: Context): Promise<void> => {
     const page = Number(ctx.match![1]);
+    const { items, prevExists, nextExists } = getCommunitiesPage(page);
     const keyboard = new InlineKeyboard();
 
     try {
-      const groups = await Groups.groups(page);
-      const prevLength = (await Groups.groups(page - 1)).length;
-      const nextLength = (await Groups.groups(page + 1)).length;
-
-      for (const group of groups) {
-        keyboard.text(
-          `${group.name} (${group.packs})`,
-          `group_${page}_${group.name}`,
-        );
+      for (const community of items) {
+        keyboard.text(community.name, `group_${page}_${community.name}`);
         keyboard.row();
       }
 
-      if (prevLength > 0) {
+      if (prevExists) {
         keyboard.text("⬅️ Oldingi", `groups_${page - 1}`);
       }
-      if (nextLength > 0) {
+      if (nextExists) {
         keyboard.text("Keyingi ➡️", `groups_${page + 1}`);
       }
 
@@ -74,9 +79,9 @@ composer.callbackQuery(
         },
       );
     } catch (error) {
-      console.error("[groups page] fetch failed:", error);
+      console.error("[groups page] load failed:", error);
       await ctx.answerCallbackQuery({
-        text: "Guruhlar serveri javob bermadi",
+        text: "Guruhlar ro'yxatini olishning iloji bo'lmadi",
         show_alert: true,
       });
     }
@@ -84,34 +89,45 @@ composer.callbackQuery(
 );
 
 composer.callbackQuery(/^group_(\d+)_(.*)$/, async (ctx: Context) => {
-  const page = ctx.match![1];
+  const page = Number(ctx.match![1]);
   const name = ctx.match![2];
   const keyboard = new InlineKeyboard();
 
   try {
-    const group = await Groups.group(name);
+    const community = communities.find((c) => c.name === name);
+    if (!community) {
+      await ctx.answerCallbackQuery({
+        text: "Bu nomdagi hamjamiyat topilmadi",
+        show_alert: true,
+      });
+      return;
+    }
 
-    for (const data of group.packs) {
-      keyboard.switchInlineCurrent(`${data.name}`, `${data.name}`);
-
-      if ((group.packs.indexOf(data) + 1) % 3 === 0) {
-        keyboard.row();
-      }
+    if (community.telegram) {
+      keyboard.url(
+        "🟦 Telegram",
+        `https://t.me/${community.telegram.replace("@", "")}`,
+      );
+    }
+    if (community.link) {
+      keyboard.url("🌐 Sayt", community.link);
     }
 
     keyboard.row().text("🔙 Orqaga", `groups_${page}`);
 
-    await ctx.editMessageText(
-      `<b>${group.arch} arxitekturasidagi ${group.name} to'planmada ${group.packs.length} ta paketlar mavjud:</b>`,
-      {
-        parse_mode: "HTML",
-        reply_markup: keyboard,
-      },
-    );
+    const text = `<b>${community.name}</b>\n\n` +
+      (community.about ? `${community.about}\n\n` : "") +
+      (community.telegram ? `Telegram: ${community.telegram}\n` : "") +
+      (community.link ? `Sayt: ${community.link}\n` : "");
+
+    await ctx.editMessageText(text, {
+      parse_mode: "HTML",
+      reply_markup: keyboard,
+    });
   } catch (error) {
-    console.error("[group detail] fetch failed:", error);
+    console.error("[group detail] load failed:", error);
     await ctx.answerCallbackQuery({
-      text: "Guruh ma'lumotini olishning iloji bo'lmadi",
+      text: "Hamjamiyat ma'lumotini olishning iloji bo'lmadi",
       show_alert: true,
     });
   }

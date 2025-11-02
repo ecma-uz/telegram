@@ -10,8 +10,9 @@ type Topics = { [key: string]: number };
 
 composer.command("warn", isReply, async (ctx: Context): Promise<any> => {
   const registeredTopics: Topics = topics;
-  const requestedTopic: string =
-    typeof ctx.match === "string" ? ctx.match : ctx.match!.join(" ");
+  const requestedTopic: string = typeof ctx.match === "string"
+    ? ctx.match
+    : ctx.match!.join(" ");
 
   if (!Object.keys(topics).includes(requestedTopic)) {
     return await reply(

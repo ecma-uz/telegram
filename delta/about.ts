@@ -3,8 +3,7 @@ import isPrivate from "../hooks/isPrivate.ts";
 
 const composer = new Composer();
 
-export const message =
-  `<b>Hurmatli foydalanuvchi!</b> \n` +
+export const message = `<b>Hurmatli foydalanuvchi!</b> \n` +
   `\n` +
   `Bizning botimiz aktiv tarzda shakllantirib boriladi. ` +
   `Buning ustida esa bir necha avtor va dasturchilar turadi, ` +

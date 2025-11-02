@@ -3,8 +3,7 @@ import isPrivate from "../hooks/isPrivate.ts";
 
 const composer = new Composer();
 
-export const message =
-  `<b>Hurmatli guruh a'zosi...</b> ` +
+export const message = `<b>Hurmatli guruh a'zosi...</b> ` +
   `\n` +
   `\n` +
   `Iltimos qoidalarga oz bo'lsada vaqt ajratishni unutmang, bu muhim! Ushbu guruhda quyidagi harakatlar taqiqlanadi:` +

@@ -1,5 +1,5 @@
 import normalize from "../utils/normalize.ts";
-import { InlineKeyboard, InlineQueryResult, Package, Search } from "../deps.ts";
+import { InlineKeyboard, InlineQueryResult, Package } from "../deps.ts";
 
 export class Pacman {
   protected results: Package[];
@@ -10,10 +10,6 @@ export class Pacman {
 
   public getLength(): number {
     return this.results.length;
-  }
-
-  public async search(query: string) {
-    this.results = await Search.search(query);
   }
 
   public inline(limit = 49): InlineQueryResult[] {
@@ -27,8 +23,7 @@ export class Pacman {
       input_message_content: {
         message_text: `<b>Nomi:</b> ${item.name}` +
           `\n` +
-          (item.version &&
-            "<b>Versiyasi:</b> " + item.version + `\n`) +
+          (item.version && "<b>Versiyasi:</b> " + item.version + `\n`) +
           (item.desc && "<b>Ma'lumot:</b> " + item.desc + `\n`) +
           (item.repo ? "<b>Repozitoriya:</b> " + item.repo + `\n` : "") +
           (item.updated &&
@@ -45,46 +40,50 @@ export class Pacman {
   }
 
   public notFound(query: string): InlineQueryResult[] {
-    return [{
-      type: "article",
-      id: "404",
-      title: "Xatolik yuz berdi!",
-      description: `Ushbu ${query} ga oid natija topilmadi!`,
-      reply_markup: new InlineKeyboard().switchInlineCurrent(
-        "Qayta urinib ko'ramizmi?",
-        "foobar",
-      ),
-      input_message_content: {
-        message_text: `<b>"${query}" ga oid natija mavjud emas!</b>` +
-          `\n` +
-          `Iltimos, boshqattan ushbu qidirmoqchi bo'lgan paketingiz yozib qidirib ko'ring.`,
-        parse_mode: "HTML",
+    return [
+      {
+        type: "article",
+        id: "404",
+        title: "Xatolik yuz berdi!",
+        description: `Ushbu ${query} ga oid natija topilmadi!`,
+        reply_markup: new InlineKeyboard().switchInlineCurrent(
+          "Qayta urinib ko'ramizmi?",
+          "foobar",
+        ),
+        input_message_content: {
+          message_text: `<b>"${query}" ga oid natija mavjud emas!</b>` +
+            `\n` +
+            `Iltimos, boshqattan ushbu qidirmoqchi bo'lgan paketingiz yozib qidirib ko'ring.`,
+          parse_mode: "HTML",
+        },
       },
-    }];
+    ];
   }
 
   public noQuery(): InlineQueryResult[] {
-    return [{
-      type: "article",
-      id: "102",
-      title: "Qidirishni boshlang!",
-      description: "Qidirmoqchi bo'lgan tldr sahifa nomini yozing!",
-      reply_markup: new InlineKeyboard().switchInlineCurrent(
-        "Qayta urinib ko'ramizmi?",
-        "foobar",
-      ),
-      input_message_content: {
-        message_text: `<b>Salom foydalanuvchi!</b>` +
-          `\n` +
-          `Siz inline rejim ishga tushurdingiz. Ushbu qulaylik yordamida siz ` +
-          `tldr sahifasiga kirmasdan turib telegramdan tldr sahifalarini ` +
-          `qidirish imkoniga ega bo'lasiz! Qidirishni boshlash uchun ` +
-          `\n` +
-          `<code>@xeonittebot \/tldr &lt;sahifa nomi&gt;</code>` +
-          `\n` +
-          `yozasiz`,
-        parse_mode: "HTML",
+    return [
+      {
+        type: "article",
+        id: "102",
+        title: "Qidirishni boshlang!",
+        description: "Qidirmoqchi bo'lgan tldr sahifa nomini yozing!",
+        reply_markup: new InlineKeyboard().switchInlineCurrent(
+          "Qayta urinib ko'ramizmi?",
+          "foobar",
+        ),
+        input_message_content: {
+          message_text: `<b>Salom foydalanuvchi!</b>` +
+            `\n` +
+            `Siz inline rejim ishga tushurdingiz. Ushbu qulaylik yordamida siz ` +
+            `tldr sahifasiga kirmasdan turib telegramdan tldr sahifalarini ` +
+            `qidirish imkoniga ega bo'lasiz! Qidirishni boshlash uchun ` +
+            `\n` +
+            `<code>@xeonittebot \/tldr &lt;sahifa nomi&gt;</code>` +
+            `\n` +
+            `yozasiz`,
+          parse_mode: "HTML",
+        },
       },
-    }];
+    ];
   }
 }
