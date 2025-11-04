@@ -1,6 +1,7 @@
 import start from "./start.ts";
 import help from "./help.ts";
 import inline from "./inline.ts";
+import moderation from "./moderation.ts";
 import which from "./which.ts";
 import { Bot } from "../deps.ts";
 import about from "./about.ts";
@@ -18,6 +19,7 @@ export default (bot: Bot) => {
     .use(help)
     .use(groups)
     .use(inline)
+    .use(moderation)
     .use(which)
     .use(about)
     .use(rules)

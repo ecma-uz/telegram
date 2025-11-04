@@ -3,7 +3,7 @@ import { reply } from "../utils/sender.ts";
 
 const keyboard = new InlineKeyboard().url(
   `Shaxsiy Chat`,
-  `https://t.me/xeonittebot`,
+  `https://t.me/ecmauzbot`,
 );
 
 export default async (ctx: Context, next: NextFunction) => {

@@ -21,7 +21,8 @@ export class Pacman {
       description: item.desc,
       reply_markup: new InlineKeyboard().url(`Web Sahifasi`, normalize(item)),
       input_message_content: {
-        message_text: `<b>Nomi:</b> ${item.name}` +
+        message_text:
+          `<b>Nomi:</b> ${item.name}` +
           `\n` +
           (item.version && "<b>Versiyasi:</b> " + item.version + `\n`) +
           (item.desc && "<b>Ma'lumot:</b> " + item.desc + `\n`) +
@@ -51,7 +52,8 @@ export class Pacman {
           "foobar",
         ),
         input_message_content: {
-          message_text: `<b>"${query}" ga oid natija mavjud emas!</b>` +
+          message_text:
+            `<b>"${query}" ga oid natija mavjud emas!</b>` +
             `\n` +
             `Iltimos, boshqattan ushbu qidirmoqchi bo'lgan paketingiz yozib qidirib ko'ring.`,
           parse_mode: "HTML",
@@ -72,7 +74,8 @@ export class Pacman {
           "foobar",
         ),
         input_message_content: {
-          message_text: `<b>Salom foydalanuvchi!</b>` +
+          message_text:
+            `<b>Salom foydalanuvchi!</b>` +
             `\n` +
             `Siz inline rejim ishga tushurdingiz. Ushbu qulaylik yordamida siz ` +
             `tldr sahifasiga kirmasdan turib telegramdan tldr sahifalarini ` +

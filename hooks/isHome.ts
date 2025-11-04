@@ -3,7 +3,7 @@ import { reply } from "../utils/sender.ts";
 
 const keyboard = new InlineKeyboard().url(
   `Guruhimizga o'ting`,
-  `https://t.me/xinuxuz`,
+  `https://t.me/react_uz`,
 );
 
 export default async (ctx: Context, next: NextFunction) => {
