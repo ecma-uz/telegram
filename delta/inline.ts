@@ -1,76 +1,113 @@
-import {
-    Composer,
-    Context,
-    InlineKeyboard,
-    type InlineQueryResult,
-} from "../deps.ts";
+import { Composer, Context } from "../deps.ts";
+import { buildKeyboard, buildMessage } from "../utils/format.ts";
+import { searchNpms, mapItem, fetchDownloads, hasTypes } from "../lib/npm.ts";
+import composer from "./code.ts";
 
-const composer = new Composer<Context>();
+const CACHE_TIME = 30;
+const MIN_LEN = 2;
+const INLINE_RE = /^(npm|pkg|package|npms)(\s+.+)?$/i;
 
-composer.inlineQuery(/(.*)/gi, async (ctx: Context) => {
-    const raw = ctx.inlineQuery?.query?.trim() ?? "";
-    if (!raw.toLowerCase().startsWith("report")) {
-        return await ctx.answerInlineQuery([], { cache_time: 0 });
-    }
+function isExact(raw: string) {
+  return /^npm!\s+/i.test(raw);
+}
 
-    const extra = raw.split(" ").slice(1).join(" ").trim();
+export const inlineHandler = new Composer<Context>();
+inlineHandler.inlineQuery(INLINE_RE, async (ctx) => {
+  const raw = (ctx.inlineQuery?.query ?? "").trim();
+  const q = raw.replace(/^npm!?\s*/i, "");
 
-    const kb = (reason: string) =>
-        new InlineKeyboard().text("✅ Reportni tasdiqlash (admin)", `mod_report:${reason}`);
+  if (q.length < MIN_LEN) {
+    return await ctx.answerInlineQuery([], { cache_time: 0, is_personal: true });
+  }
 
-    const results: InlineQueryResult[] = [
-        {
-            type: "article",
-            id: "rep_badwords",
-            title: "So'kinish / haqorat",
-            description: "Reply qilib yuboring, keyin tugmani bosing",
-            reply_markup: kb("badwords"),
-            input_message_content: {
-                message_text:
-                    "*Report:* guruh qoidalariga zid so'zlar (so'kinish / haqorat). Admin, iltimos tekshiring.",
-                parse_mode: "Markdown",
-            },
+  const offset = Number(ctx.inlineQuery?.offset || "0") || 0;
+
+  let data;
+  try {
+    data = await searchNpms(q, offset);
+  } catch {
+    return await ctx.answerInlineQuery([], {
+      cache_time: 1,
+      is_personal: true,
+      switch_pm_text: "NPM qidiruvda xatolik. Keyinroq urinib ko‘ring.",
+      switch_pm_parameter: "npm-error",
+    });
+  }
+
+  const results = await Promise.all(
+    data.results.map(async (it, i) => {
+      const item = mapItem(it);
+      const [dls, hasT] = await Promise.all([
+        fetchDownloads(item.name),
+        hasTypes(item.name),
+      ]);
+
+      const titleSuffix = dls != null ? ` • ${dls.toLocaleString()} w` : "";
+      const title = `${item.name} — ${item.version}${titleSuffix}`;
+      const description = item.description ?? "";
+
+      return {
+        type: "article",
+        id: String(offset + i),
+        title,
+        description,
+        input_message_content: {
+          message_text: buildMessage(item, dls, hasT),
+          parse_mode: "MarkdownV2",
+          disable_web_page_preview: true,
         },
-        {
-            type: "article",
-            id: "rep_ads",
-            title: "Reklama / link",
-            description: "t.me, instagram, noma'lum link ...",
-            reply_markup: kb("ads"),
-            input_message_content: {
-                message_text:
-                    "*Report:* ruxsatsiz reklama yoki tashqi havola yuborilgan. Admin, iltimos tekshiring.",
-                parse_mode: "Markdown",
-            },
-        },
-        {
-            type: "article",
-            id: "rep_ai",
-            title: "AI / ChatGPT kontent",
-            description: "AI yozgani o'xshaydi",
-            reply_markup: kb("ai"),
-            input_message_content: {
-                message_text:
-                    "*Report:* AI/chatgpt uslubidagi kontent. Admin, iltimos tekshiring.",
-                parse_mode: "Markdown",
-            },
-        },
-        {
-            type: "article",
-            id: "rep_other",
-            title: "Boshqa qoida buzilishi",
-            description: extra ? `Izoh: ${extra}` : "off-topic, flood, spam ...",
-            reply_markup: kb(extra || "other"),
-            input_message_content: {
-                message_text: extra
-                    ? `*Report:* ${extra}`
-                    : "*Report:* Boshqa qoida buzilishi. Admin, iltimos tekshiring.",
-                parse_mode: "Markdown",
-            },
-        },
-    ];
+        reply_markup: buildKeyboard(item),
+      };
+    }),
+  );
 
-    return await ctx.answerInlineQuery(results, { cache_time: 0 });
+  const finalResults = isExact(raw) && results.length
+    ? [results[0], ...results.slice(1)]
+    : results;
+
+  const nextOffset = offset + finalResults.length;
+  const hasMore = nextOffset < (data.total ?? 0);
+
+  return await ctx.answerInlineQuery(finalResults, {
+    cache_time: CACHE_TIME,
+    is_personal: false,
+    next_offset: hasMore ? String(nextOffset) : undefined,
+    switch_pm_text: finalResults.length ? undefined : "Hech narsa topilmadi",
+    switch_pm_parameter: finalResults.length ? undefined : "npm-empty",
+  });
 });
 
-export default composer;
+export const commandHandler = new Composer<Context>();
+commandHandler.command(["npm", "pkg", "package"], async (ctx) => {
+  const raw = (ctx.match as string)?.trim() ?? "";
+  if (!raw) {
+    await ctx.reply("Foydalanish: `/npm react`", { parse_mode: "Markdown" });
+    return;
+  }
+
+  try {
+    const data = await searchNpms(raw, 0);
+    const top3 = data.results.slice(0, 3);
+    if (!top3.length) {
+      await ctx.reply("Hech narsa topilmadi.");
+      return;
+    }
+
+    for (const r of top3) {
+      const item = mapItem(r);
+      const [dls, hasT] = await Promise.all([
+        fetchDownloads(item.name),
+        hasTypes(item.name),
+      ]);
+
+      await ctx.reply(buildMessage(item, dls, hasT), {
+        parse_mode: "MarkdownV2",
+        disable_web_page_preview: true,
+      });
+    }
+  } catch {
+    await ctx.reply("NPM qidiruvda xatolik. Keyinroq urinib ko‘ring.");
+  }
+});
+
+export default composer
