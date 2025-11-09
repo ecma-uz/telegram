@@ -1,7 +1,6 @@
 import { Composer, Context } from "../deps.ts";
 import { buildKeyboard, buildMessage } from "../utils/format.ts";
 import { searchNpms, mapItem, fetchDownloads, hasTypes } from "../lib/npm.ts";
-import composer from "./code.ts";
 
 const CACHE_TIME = 30;
 const MIN_LEN = 2;
@@ -11,8 +10,9 @@ function isExact(raw: string) {
   return /^npm!\s+/i.test(raw);
 }
 
-export const inlineHandler = new Composer<Context>();
-inlineHandler.inlineQuery(INLINE_RE, async (ctx) => {
+const composer = new Composer<Context>();
+
+composer.inlineQuery(INLINE_RE, async (ctx) => {
   const raw = (ctx.inlineQuery?.query ?? "").trim();
   const q = raw.replace(/^npm!?\s*/i, "");
 
@@ -29,7 +29,7 @@ inlineHandler.inlineQuery(INLINE_RE, async (ctx) => {
     return await ctx.answerInlineQuery([], {
       cache_time: 1,
       is_personal: true,
-      switch_pm_text: "NPM qidiruvda xatolik. Keyinroq urinib ko‘ring.",
+      switch_pm_text: "NPM qidiruvda xatolik. Keyinroq urinib ko'ring.",
       switch_pm_parameter: "npm-error",
     });
   }
@@ -72,13 +72,12 @@ inlineHandler.inlineQuery(INLINE_RE, async (ctx) => {
     cache_time: CACHE_TIME,
     is_personal: false,
     next_offset: hasMore ? String(nextOffset) : undefined,
-    switch_pm_text: finalResults.length ? undefined : "Hech narsa topilmadi",
+    switch_pm_text: finalResults.length ? undefined : "Ehh hech narsa topilmadi",
     switch_pm_parameter: finalResults.length ? undefined : "npm-empty",
   });
 });
 
-export const commandHandler = new Composer<Context>();
-commandHandler.command(["npm", "pkg", "package"], async (ctx) => {
+composer.command(["npm", "pkg", "package"], async (ctx) => {
   const raw = (ctx.match as string)?.trim() ?? "";
   if (!raw) {
     await ctx.reply("Foydalanish: `/npm react`", { parse_mode: "Markdown" });
@@ -89,7 +88,7 @@ commandHandler.command(["npm", "pkg", "package"], async (ctx) => {
     const data = await searchNpms(raw, 0);
     const top3 = data.results.slice(0, 3);
     if (!top3.length) {
-      await ctx.reply("Hech narsa topilmadi.");
+      await ctx.reply("Ehh hech narsa topilmadi.");
       return;
     }
 
@@ -106,8 +105,8 @@ commandHandler.command(["npm", "pkg", "package"], async (ctx) => {
       });
     }
   } catch {
-    await ctx.reply("NPM qidiruvda xatolik. Keyinroq urinib ko‘ring.");
+    await ctx.reply("Hmm NPM qidiruvda xatolik. Keyinroq urinib ko'ring.");
   }
 });
 
-export default composer
+export default composer;

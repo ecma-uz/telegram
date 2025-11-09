@@ -1,4 +1,4 @@
-import type { NpmSearchItem } from "./types.ts";
+import type { NpmSearchItem } from "../lib/npm.ts";
 
 export function md2(s = "") {
   return s.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, (m) => "\\" + m);
@@ -16,23 +16,36 @@ export function buildMessage(
   weekly?: number,
   hasTypes?: boolean,
 ) {
-  const lines = [
-    `*${md2(item.name)}*  \`${md2(item.version)}\``,
-    item.description ? md2(item.description) : "_tavsif mavjud emas_",
-    "",
-    "📦 O‘rnatish:",
-    `\`npm i ${md2(item.name)}\``,
-    `\`yarn add ${md2(item.name)}\``,
-    `\`pnpm add ${md2(item.name)}\``,
-    "",
-    `[npm](${md2(item.npmUrl)})` +
-    (item.repoUrl ? ` • [repo](${md2(item.repoUrl)})` : "") +
-    (item.homeUrl ? ` • [home](${md2(item.homeUrl)})` : ""),
-    weekly != null ? `\n_${kfmt(weekly)} haftalik yuklab olishlar_` : "",
-    hasTypes ? `\n_Types mavjud: ✅ @types/${md2(item.name)}_` : "",
-  ].filter(Boolean);
+  const parts: string[] = [];
 
-  return lines.join("\n");
+  parts.push(`*${md2(item.name)}* \`v${md2(item.version)}\``);
+  if (item.description) {
+    parts.push(`_${md2(item.description)}_`);
+    parts.push("");
+  }
+
+  if (weekly != null || hasTypes) {
+    const stats: string[] = [];
+    if (weekly != null) {
+      stats.push(`${md2(kfmt(weekly))} haftalik`);
+    }
+    if (hasTypes) {
+      stats.push(`${md2("TypeScript")} types`);
+    }
+    if (stats.length > 0) {
+      parts.push(stats.join(" • "));
+      parts.push("");
+    }
+  }
+
+  parts.push(`*${md2("O'rnatish:")}*`);
+  parts.push(`\`\`\`bash`);
+  parts.push(`npm i ${md2(item.name)}`);
+  parts.push(`yarn add ${md2(item.name)}`);
+  parts.push(`pnpm add ${md2(item.name)}`);
+  parts.push(`\`\`\``);
+
+  return parts.join("\n");
 }
 
 export function buildKeyboard(item: NpmSearchItem) {

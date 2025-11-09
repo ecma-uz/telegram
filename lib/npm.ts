@@ -1,4 +1,4 @@
-type NpmSearchItem = {
+export type NpmSearchItem = {
   name: string;
   version: string;
   description?: string;
@@ -83,6 +83,13 @@ export async function hasTypes(name: string): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+export function getPackageLogo(packageName: string, repoUrl?: string): string {
+  // shields.io dan npm badge olish (har doim ishlaydi)
+  // PNG formatida olish uchun .png yoki .svg?logo=npm ishlatamiz
+  // Telegram PNG va JPG formatlarini yaxshiroq qo'llab-quvvatlaydi
+  return `https://img.shields.io/npm/v/${encodeURIComponent(packageName)}.png?style=flat-square&logo=npm&logoColor=white`;
 }
 
 export function mapItem(x: NpmsSearchResponse["results"][number]): NpmSearchItem {
