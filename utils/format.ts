@@ -49,7 +49,9 @@ export function buildMessage(
 }
 
 export function buildKeyboard(item: NpmSearchItem) {
-  const row = [{ text: "npm", url: item.npmUrl }] as Array<{ text: string; url: string }>;
+  const row = [{ text: "npm", url: item.npmUrl }] as Array<
+    { text: string; url: string }
+  >;
   if (item.repoUrl) row.push({ text: "repo", url: item.repoUrl });
   if (item.homeUrl) row.push({ text: "home", url: item.homeUrl });
   return { inline_keyboard: [row] };

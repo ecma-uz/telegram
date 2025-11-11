@@ -6,7 +6,7 @@ import { Bot } from "../deps.ts";
 import about from "./about.ts";
 import rules from "./rules.ts";
 import text from "./text.ts";
-import report from "./report.ts"
+import report from "./report.ts";
 import groups from "./groups.ts";
 import trigger from "./trigger.ts";
 import feedback from "./feedback.ts";

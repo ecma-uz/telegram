@@ -37,4 +37,3 @@ composer.command("doc", isReply, async (ctx: Context): Promise<any> => {
 });
 
 export default composer;
-

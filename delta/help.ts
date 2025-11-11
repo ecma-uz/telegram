@@ -3,8 +3,7 @@ import * as start from "./start.ts";
 
 const composer = new Composer();
 
-export const message =
-  `<b>Mavjud komandalar ro'yxati:</b>` +
+export const message = `<b>Mavjud komandalar ro'yxati:</b>` +
   `\n` +
   `\n` +
   `/doc - <code>reply qilingan odamga dok borligi haqida eslatish</code>` +

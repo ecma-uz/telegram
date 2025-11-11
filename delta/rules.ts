@@ -54,7 +54,9 @@ function buildPrivateKeyboard(): InlineKeyboard {
         `https://t.me/${community.telegram.replace("@", "")}`,
       );
 
-      if (index % 2 === 1 || (index === communities.length - 1 && index % 2 === 0)) {
+      if (
+        index % 2 === 1 || (index === communities.length - 1 && index % 2 === 0)
+      ) {
         keyboard.row();
       }
     }

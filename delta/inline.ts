@@ -1,6 +1,6 @@
 import { Composer, Context } from "../deps.ts";
 import { buildKeyboard, buildMessage } from "../utils/format.ts";
-import { searchNpms, mapItem, fetchDownloads, hasTypes } from "../lib/npm.ts";
+import { fetchDownloads, hasTypes, mapItem, searchNpms } from "../lib/npm.ts";
 
 const CACHE_TIME = 30;
 const MIN_LEN = 2;
@@ -17,7 +17,10 @@ composer.inlineQuery(INLINE_RE, async (ctx) => {
   const q = raw.replace(/^npm!?\s*/i, "");
 
   if (q.length < MIN_LEN) {
-    return await ctx.answerInlineQuery([], { cache_time: 0, is_personal: true });
+    return await ctx.answerInlineQuery([], {
+      cache_time: 0,
+      is_personal: true,
+    });
   }
 
   const offset = Number(ctx.inlineQuery?.offset || "0") || 0;
@@ -72,7 +75,9 @@ composer.inlineQuery(INLINE_RE, async (ctx) => {
     cache_time: CACHE_TIME,
     is_personal: false,
     next_offset: hasMore ? String(nextOffset) : undefined,
-    switch_pm_text: finalResults.length ? undefined : "Ehh hech narsa topilmadi",
+    switch_pm_text: finalResults.length
+      ? undefined
+      : "Ehh hech narsa topilmadi",
     switch_pm_parameter: finalResults.length ? undefined : "npm-empty",
   });
 });

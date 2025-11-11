@@ -45,7 +45,9 @@ export async function searchNpms(query: string, from = 0) {
   const cached = getCached(searchCache, key);
   if (cached) return cached;
 
-  const url = `https://api.npms.io/v2/search?size=${PAGE_SIZE}&from=${from}&q=${encodeURIComponent(query)}`;
+  const url = `https://api.npms.io/v2/search?size=${PAGE_SIZE}&from=${from}&q=${
+    encodeURIComponent(query)
+  }`;
   const r = await fetch(url, { headers: { accept: "application/json" } });
   if (!r.ok) throw new Error(`npms ${r.status}`);
   const data = (await r.json()) as NpmsSearchResponse;
@@ -53,7 +55,9 @@ export async function searchNpms(query: string, from = 0) {
   return data;
 }
 
-export async function fetchDownloads(name: string): Promise<number | undefined> {
+export async function fetchDownloads(
+  name: string,
+): Promise<number | undefined> {
   const c = getCached(downloadsCache, name);
   if (c != null) return c;
 
@@ -85,14 +89,15 @@ export async function hasTypes(name: string): Promise<boolean> {
   }
 }
 
-export function getPackageLogo(packageName: string, repoUrl?: string): string {
-  // shields.io dan npm badge olish (har doim ishlaydi)
-  // PNG formatida olish uchun .png yoki .svg?logo=npm ishlatamiz
-  // Telegram PNG va JPG formatlarini yaxshiroq qo'llab-quvvatlaydi
-  return `https://img.shields.io/npm/v/${encodeURIComponent(packageName)}.png?style=flat-square&logo=npm&logoColor=white`;
+export function getPackageLogo(packageName: string): string {
+  return `https://img.shields.io/npm/v/${
+    encodeURIComponent(packageName)
+  }.png?style=flat-square&logo=npm&logoColor=white`;
 }
 
-export function mapItem(x: NpmsSearchResponse["results"][number]): NpmSearchItem {
+export function mapItem(
+  x: NpmsSearchResponse["results"][number],
+): NpmSearchItem {
   const p = x.package;
   return {
     name: p.name,
