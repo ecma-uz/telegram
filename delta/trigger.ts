@@ -1,25 +1,16 @@
 // deno-lint-ignore-file no-explicit-any
 import { reply } from "../utils/sender.ts";
 import isReply from "../hooks/isReply.ts";
-import topics from "../topics.json" with { type: "json" };
+import communities from "../data/communities.json" with { type: "json" };
 import { Composer, Context, InlineKeyboard } from "../deps.ts";
 
 const composer = new Composer();
 
-type Topics = { [key: string]: number };
-
 composer.command("warn", isReply, async (ctx: Context): Promise<any> => {
-  const registeredTopics: Topics = topics;
-  const requestedTopic: string = typeof ctx.match === "string"
-    ? ctx.match
-    : ctx.match!.join(" ");
-
-  if (!Object.keys(topics).includes(requestedTopic)) {
+  if (ctx.chat!.type === "private") {
     return await reply(
       ctx,
-      `<b>Bunaqangi topic bizda borga o'xshamaydiyov...\n\nBizda faqat quyidagi topic (mavzu)lar bor:</b>` +
-        `\n` +
-        `<i>${Object.keys(registeredTopics).join(" | ")}</i>`,
+      `Ebe hay, biz O'zbek JavaScript/TypeScript hamjamiyati guruhida emasga o'xshaymiz...`,
     );
   }
 
@@ -44,48 +35,67 @@ composer.command("warn", isReply, async (ctx: Context): Promise<any> => {
       console.warn("Oh no... I couldn't delete the message!");
     });
 
-  const requestedTopicURL = registeredTopics[requestedTopic];
+  const requestedCommunity: string = ctx.match
+    ? (typeof ctx.match === "string" ? ctx.match : ctx.match.join(" ")).trim()
+    : "";
 
-  const text =
-    `<b>Hurmatli <a href="tg://user?id=${ctx?.message?.reply_to_message?.from?.id}">${ctx?.message?.reply_to_message?.from?.first_name}</a>,</b>` +
-    `\n` +
-    `\n` +
-    `Tushunishim bo'yicha siz mavzudan chetlayashyabsiz. Iltimos, ` +
-    `quyidagi tugmachani bosish orqali bizning <b>${requestedTopic}</b> guruhimizga o'tib oling! ` +
-    `<b>${requestedTopic}</b> guruhimizda ushbu mavzuda suhbatlashish ruxsat etiladi. Boshqalarga xalaqit qilmayliga 😉` +
-    `\n` +
-    `\n` +
-    `<b>Hurmat ila, Ecma assisent</b>`;
+  let text: string;
+  let keyboard: InlineKeyboard | undefined;
 
-  const keyboard = new InlineKeyboard().url(
-    `${requestedTopic.charAt(0).toUpperCase()}${requestedTopic.slice(1)} Chat`,
-    `https://t.me/xinuxuz/${requestedTopicURL}`,
+  const foundCommunity = communities.find((c) =>
+    c.name.toLowerCase().includes(requestedCommunity.toLowerCase()) ||
+    requestedCommunity.toLowerCase().includes(c.name.toLowerCase())
   );
 
-  return await reply(ctx, text, keyboard);
-});
+  if (requestedCommunity && foundCommunity) {
+    text =
+      `<b>Hurmatli <a href="tg://user?id=${ctx?.message?.reply_to_message?.from?.id}">${ctx?.message?.reply_to_message?.from?.first_name}</a>,</b>` +
+      `\n` +
+      `\n` +
+      `Tushunishim bo'yicha siz mavzudan chetlayashyabsiz. Iltimos, ` +
+      `quyidagi tugmachani bosish orqali bizning <b>${foundCommunity.name}</b> hamjamiyatimizga o'tib oling! ` +
+      `<b>${foundCommunity.name}</b> hamjamiyatida ushbu mavzuda suhbatlashish ruxsat etiladi. Boshqalarga xalaqit qilmayliga 😉` +
+      `\n` +
+      `\n` +
+      `<b>Hurmat ila, Ecma assisent</b>`;
 
-composer.command("doc", isReply, async (ctx: Context): Promise<any> => {
-  if (ctx?.message?.reply_to_message?.from?.id === ctx.me.id) {
-    return await reply(ctx, `Ha-ha... yaxshi urinish!`);
+    keyboard = new InlineKeyboard();
+    if (foundCommunity.telegram) {
+      keyboard.url(
+        `${foundCommunity.name}`,
+        `https://t.me/${foundCommunity.telegram.replace("@", "")}`,
+      );
+    }
+    if (foundCommunity.link) {
+      keyboard.url("🌐 Sayt", foundCommunity.link);
+    }
   } else {
-    await ctx.api
-      .deleteMessage(ctx.message!.chat!.id, ctx.message!.message_id)
-      .catch(() => {
-        console.warn("Oh no... I couldn't delete the message!");
-      });
-
-    const text =
-      `<b>Demak, <a href="tg://user?id=${ctx?.message?.reply_to_message?.from?.id}">${ctx?.message?.reply_to_message?.from?.first_name}</a>,</b>` +
+    text =
+      `<b>Hurmatli <a href="tg://user?id=${ctx?.message?.reply_to_message?.from?.id}">${ctx?.message?.reply_to_message?.from?.first_name}</a>,</b>` +
       `\n` +
       `\n` +
-      `<i>Bir bor ekan, bir yo'q ekan... Qadim o'tgan zamonlarda dokumentatsiya ` +
-      `bo'lgan ekan. Aytishlariga qaraganda, undan deyarli hamma savollarga ` +
-      `javob olsa bo'larkanda. Yanachi, unga avtorlar shunchalik ko'p vaqt ajratishar ` +
-      `ekanu, lekin uni sanoqligina odam o'qisharkan. Attang...</i>`;
+      `Mavzudan chetlashganga ogohlantirish. Iltimos, guruh qoidalariga rioya qiling 😉` +
+      `\n` +
+      `\n` +
+      `<b>Mavzuga mos hamjamiyatlar:</b>`;
 
-    return await reply(ctx, text);
+    keyboard = new InlineKeyboard();
+
+    communities.forEach((community, index) => {
+      if (community.telegram) {
+        keyboard.url(
+          community.name,
+          `https://t.me/${community.telegram.replace("@", "")}`,
+        );
+
+        if (index % 2 === 1 || (index === communities.length - 1 && index % 2 === 0)) {
+          keyboard.row();
+        }
+      }
+    });
   }
+
+  return await reply(ctx, text, keyboard);
 });
 
 export default composer;

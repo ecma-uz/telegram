@@ -7,12 +7,11 @@ import about from "./about.ts";
 import rules from "./rules.ts";
 import text from "./text.ts";
 import report from "./report.ts"
-import strikes from "./strikes.ts"
 import groups from "./groups.ts";
-import warrior from "./warrior.ts";
 import trigger from "./trigger.ts";
 import feedback from "./feedback.ts";
 import code from "./code.ts";
+import doc from "./doc.ts";
 
 export default (bot: Bot) => {
   bot
@@ -22,12 +21,11 @@ export default (bot: Bot) => {
     .use(inline)
     .use(which)
     .use(report)
-    .use(strikes)
     .use(about)
     .use(rules)
     .use(feedback)
-    .use(warrior)
     .use(trigger)
+    .use(doc)
     .use(code)
     .use(text);
 };

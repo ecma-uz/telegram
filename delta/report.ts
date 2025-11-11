@@ -158,6 +158,6 @@ async function reportHandler(ctx: Context) {
     );
 }
 
-composer.command(["report", "rep", "warn"], reportHandler);
+composer.command(["report", "rep"], reportHandler);
 
 export default composer;
