@@ -1,10 +1,10 @@
 #!/usr/bin/env just --justfile
 
 start:
-	deno run --allow-all mod.ts
+	deno run --allow-all main.ts --config=./config.toml
 
 dev:
-	deno run --watch-hmr --allow-all mod.ts
+	deno run --watch-hmr --allow-all main.ts --config=./config.toml
 
 fmt:
 	deno fmt

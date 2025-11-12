@@ -9,7 +9,7 @@ export const message = (ctx: Context) =>
   `<b>Hurmatli ${ctx.from!.first_name}!</b> \n` +
   `\n` +
   `\n` +
-  `Xinux distributivi haqida o'z fikringizni yozib qoldiring... ` +
+  `Ecma.uz distributivi haqida o'z fikringizni yozib qoldiring... ` +
   `Bizga o'z fikringizni yozib qoldirganingiz uchun o'z ` +
   `minnatdorchiligimizni bildiramiz. Ushbu fikr va kamchiliklar ` +
   `tez orada muhokama qilib bo'lishimiz bilanoq kuchga kiritishga ` +

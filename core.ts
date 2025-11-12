@@ -9,35 +9,38 @@ export const handle = (bot: Bot) => webhookCallback(bot, "std/http");
 const webhook = (bot: Bot, config: Configs) => {
   console.log(blue("[INFO]"), `bot is starting on ${config.mode}`);
 
-  Deno.serve({
-    port: config.port,
-    hostname: "127.0.0.1",
-  }, async (req) => {
-    const url = new URL(req.url);
+  Deno.serve(
+    {
+      port: config.port,
+      hostname: "127.0.0.1",
+    },
+    async (req) => {
+      const url = new URL(req.url);
 
-    console.log(config);
+      console.log(config);
 
-    if (req.method === "POST") {
-      if (url.pathname.slice(1) === bot.token) {
-        try {
-          return await handle(bot)(req);
-        } catch (err) {
-          console.error(err);
+      if (req.method === "POST") {
+        if (url.pathname.slice(1) === bot.token) {
+          try {
+            return await handle(bot)(req);
+          } catch (err) {
+            console.error(err);
+          }
         }
       }
-    }
 
-    if (req.method === "GET") {
-      try {
-        await bot.api.setWebhook(`${config.host}/${bot.token}`);
-        return new Response("Done. Set");
-      } catch (_) {
-        return new Response("Couldn't succeed with installing webhook");
+      if (req.method === "GET") {
+        try {
+          await bot.api.setWebhook(`${config.host}/${bot.token}`);
+          return new Response("Done. Set");
+        } catch (_) {
+          return new Response("Couldn't succeed with installing webhook");
+        }
       }
-    }
 
-    return new Response("What you're trying to post?");
-  });
+      return new Response("What you're trying to post?");
+    },
+  );
 };
 
 const polling = async (bot: Bot) => {
@@ -46,7 +49,7 @@ const polling = async (bot: Bot) => {
 
 export const launch = async () => {
   if (args.config == undefined) {
-    console.log("Path to config file is not defined!");
+    console.info("Path to config file is not defined!");
     Deno.exit(1);
   }
 

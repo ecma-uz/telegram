@@ -1,0 +1,14 @@
+[
+  {
+    "name": "React O'zbek hamjamiyati",
+    "about": "O'zbek dasturchilari uchun mo'ljallangan React.js framework hamjamiyati.",
+    "telegram": "@react_uz",
+    "link": "https://ecma.uz"
+  },
+  {
+    "name": "Node.js O'zbek hamjamiyati",
+    "about": "O'zbek dasturchilari uchun Node.js texnologiyasi bo'yicha hamjamiyat.",
+    "telegram": "@nodejs_uz",
+    "link": "https://ecma.uz"
+  }
+]

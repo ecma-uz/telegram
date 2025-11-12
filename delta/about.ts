@@ -12,7 +12,7 @@ export const message = `<b>Hurmatli foydalanuvchi!</b> \n` +
 
 export const keyboard = new InlineKeyboard().url(
   `Ochiq Havolalar`,
-  `https://github.com/xinuxuz/xeonitte`,
+  `https://github.com/ecma-uz/telegram`,
 );
 
 composer.command("about", isPrivate, async (ctx: Context): Promise<void> => {
