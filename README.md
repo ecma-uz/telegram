@@ -21,26 +21,10 @@ all sub-communities to moderate, manage and provide.
 This project has everything configured ready to get started with developer right
 away thanks to Nix package manager. In order to get started:
 
-This file defines all required environment variables and runtime settings.
+Copy `example.config.toml` to `config.toml` and fill in your values:
 
-```toml
-# Telegram bot token (required)
-token = "7635793249:AAGijQ5I210aJVLRv-jR63Q6hFS5uCJQyfU"
-
-# Deployment mode: "polling" or "webhook"
-mode = "polling"
-
-# Webhook / local server settings
-host = "127.0.0.1"
-port = 8000
-
-# Optional admin or chat configuration
-admin_user_id = 8118668411
-home_chat_id = ""
-
-# Notes:
-# - When using "polling", you can keep host = "127.0.0.1"
-# - When using "webhook", set `host` to your public HTTPS endpoint (e.g. ngrok or VPS domain)
+```bash
+cp example.config.toml config.toml
 ```
 
 ```bash
