@@ -17,8 +17,6 @@ const webhook = (bot: Bot, config: Configs) => {
     async (req) => {
       const url = new URL(req.url);
 
-      console.log(config);
-
       if (req.method === "POST") {
         if (url.pathname.slice(1) === bot.token) {
           try {
