@@ -1,0 +1,12 @@
+# Your Telegram Bot Token (get it from @BotFather)
+token = "YOUR_BOT_TOKEN"
+
+# Bot mode: "polling" or "webhook"
+mode = "polling"
+
+# Host address (used for webhook mode)
+host = "127.0.0.1"
+
+# Port number (used for webhook mode)
+port = 8000
+
